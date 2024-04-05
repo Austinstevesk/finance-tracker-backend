@@ -1,4 +1,4 @@
-from .crud_base import CRUDBase
-from ..db.mongodb import asset_collection
+from app.crud.crud_base import CRUDBase
+from app.db.mongodb import asset_collection
 
 assets_crud = CRUDBase(asset_collection, "Asset")

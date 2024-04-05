@@ -1,5 +1,5 @@
-from .base import PyObjectId
-from .users import (
+from app.schemas.base import PyObjectId
+from app.schemas.users import (
     ExtendedUserInSignup,
     LoginData,
     UserInDB,
@@ -9,49 +9,49 @@ from .users import (
     UserInUpdate
 )
 
-from .accounts import (
+from app.schemas.accounts import (
     Account,
     AccountCreate,
     AccountInResponse,
     AccountInUpdate,
 )
 
-from .budgets import (
+from app.schemas.budgets import (
     BudgetCreate,
     BudgetInResponse,
     BudgetInUpdate,
     ExtendedBudgetCreate,
 )
 
-from .assets import(
+from app.schemas.assets import(
     AssetCreate,
     AssetInResponse,
     AssetInUpdate,
     ExtendedAssetCreate,
 )
 
-from .expenses import(
+from app.schemas.expenses import(
     ExpenseCreate,
     ExpenseInResponse,
     ExpenseInUpdate,
     ExtendedExpenseCreate,
 )
 
-from .goals import (
+from app.schemas.goals import (
     ExtendedGoalCreate,
     GoalCreate,
     GoalInResponse,
     GoalInUpdate,
 )
 
-from .income import (
+from app.schemas.income import (
     ExtendedIncomeCreate,
     IncomeCreate,
     IncomeInResponse,
     IncomeInUpdate,
 )
 
-from .liabilities import (
+from app.schemas.liabilities import (
     ExtendedLiabilityCreate,
     LiabilityCreate,
     LiabilityInResponse,

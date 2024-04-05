@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from .... import schemas, crud
-from ....utils.oauth2 import get_current_user
+from app import schemas, crud
+from app.utils.oauth2 import get_current_user
 
 router = APIRouter(
     prefix="/accounts", tags=["Accounts"],

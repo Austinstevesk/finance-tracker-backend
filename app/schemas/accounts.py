@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import Optional
-from .base import PyObjectId, DateMixins
+from app.schemas.base import PyObjectId, DateMixins
 
 class Account(BaseModel):
     balance: Optional[float] = float

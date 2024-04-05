@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, status
 from typing import List
-from .... import schemas, crud
-from ....utils.oauth2 import get_current_user
+from app import schemas, crud
+from app.utils.oauth2 import get_current_user
 
 router = APIRouter(
     prefix="/users", tags=["Users"],

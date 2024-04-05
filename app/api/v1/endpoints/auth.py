@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, status
 from fastapi.encoders import jsonable_encoder
-from .... import schemas
-from ....crud import crud_users
+from app import schemas
+from app.crud import crud_users
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 

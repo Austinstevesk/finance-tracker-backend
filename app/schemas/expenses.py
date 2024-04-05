@@ -2,7 +2,7 @@ from datetime import date
 from pydantic import BaseModel, Field
 from typing import Optional
 
-from .base import DateMixins, PyObjectId
+from app.schemas.base import DateMixins, PyObjectId
 
 class ExpenseCreate(BaseModel):
     name: str

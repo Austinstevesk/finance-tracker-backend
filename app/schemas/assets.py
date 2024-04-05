@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field
 from datetime import date
 from typing import Optional
 
-from .base import DateMixins, PyObjectId
+from app.schemas.base import DateMixins, PyObjectId
 
 class AssetCreate(BaseModel):
     name: str

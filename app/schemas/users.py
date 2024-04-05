@@ -2,7 +2,7 @@ import re
 from pydantic import BaseModel, EmailStr, Field, validator
 from typing import Optional
 from datetime import datetime, timedelta
-from .base import DateMixins, PyObjectId
+from app.schemas.base import DateMixins, PyObjectId
 
 class UserInDB(BaseModel):
     full_name: str

@@ -1,7 +1,7 @@
 from datetime import timedelta
-from ..db.mongodb import user_collection
-from ..schemas import UserInResponse, PyObjectId
-from ..core.settings.config import settings
+from app.db.mongodb import user_collection
+from app.schemas import UserInResponse, PyObjectId
+from app.core.settings.config import settings
 
 from fastapi import HTTPException, Security, status
 from fastapi_jwt import JwtAccessBearer, JwtAuthorizationCredentials, JwtRefreshBearer

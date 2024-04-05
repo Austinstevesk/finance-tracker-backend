@@ -1,14 +1,14 @@
 from fastapi import HTTPException, status
-from .crud_base import CRUDBase
-from .. import schemas
-from ..db.mongodb import user_collection
-from ..utils.password_utils import hash, verify
-from ..utils.oauth2 import access_security, refresh_security
+from app.crud.crud_base import CRUDBase
+from app import schemas
+from app.db.mongodb import user_collection
+from app.utils.password_utils import hash, verify
+from app.utils.oauth2 import access_security, refresh_security
 
 
 
 user_crud = CRUDBase(user_collection, "User")
-from ..crud.crud_accounts import accounts_crud
+from app.crud.crud_accounts import accounts_crud
 
 def create_user(user: schemas.UserInSignUp):
     existing_user = user_collection.find_one({"email": user.email})

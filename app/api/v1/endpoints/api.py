@@ -1,14 +1,14 @@
 from fastapi import APIRouter
 
-from .auth import router as auth_router
-from .users import router as user_router
-from .accounts import router as account_router
-from .assets import router as asset_router
-from .budgets import router as budget_router
-from .expenses import router as expense_router
-from .goals import router as goal_router
-from .income import router as income_router
-from .liabilities import router as liability_router
+from app.api.v1.endpoints.auth import router as auth_router
+from app.api.v1.endpoints.users import router as user_router
+from app.api.v1.endpoints.accounts import router as account_router
+from app.api.v1.endpoints.assets import router as asset_router
+from app.api.v1.endpoints.budgets import router as budget_router
+from app.api.v1.endpoints.expenses import router as expense_router
+from app.api.v1.endpoints.goals import router as goal_router
+from app.api.v1.endpoints.income import router as income_router
+from app.api.v1.endpoints.liabilities import router as liability_router
 
 router = APIRouter(prefix="/api/v1")
 router.include_router(auth_router)

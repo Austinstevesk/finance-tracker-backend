@@ -1,7 +1,7 @@
 from fastapi import HTTPException, status, Response
 from pydantic import BaseModel
 from typing import List
-from ..schemas.base import PyObjectId, get_current_timestamp
+from app.schemas.base import PyObjectId, get_current_timestamp
 
 class CRUDBase:
     def __init__(self, collection, item_str) -> None:
