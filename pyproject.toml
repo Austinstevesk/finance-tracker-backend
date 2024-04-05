@@ -1,0 +1,23 @@
+[project]
+name = ""
+version = ""
+description = ""
+authors = [
+    {name = "Austinstevesk", email = "austinstevesk@gmail.com"},
+]
+dependencies = [
+    "fastapi>=0.110.0",
+    "uvicorn>=0.29.0",
+    "bson>=0.5.10",
+    "pydantic>=2.6.4",
+    "email-validator>=2.1.1",
+    "pymongo>=4.6.3",
+    "passlib>=1.7.4",
+    "fastapi-jwt>=0.2.0",
+    "python-dotenv>=1.0.1",
+    "pydantic-settings>=2.2.1",
+]
+requires-python = ">=3.10"
+readme = "README.md"
+license = {text = "MIT"}
+
