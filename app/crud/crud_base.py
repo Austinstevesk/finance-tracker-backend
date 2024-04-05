@@ -26,6 +26,10 @@ class CRUDBase:
     def get_many(self, query) -> List[dict]:
         items = self.collection.find(query).sort("updated_at")
         return items
+    
+    def get_by_query(self, query) -> dict:
+        item = self.collection.find_one(query)
+        return item
 
     def get_by_user_id(self, user_id: PyObjectId, raise_error: bool = True) -> dict | None:
         item = self.collection.find_one({"user_id": PyObjectId(user_id)})

@@ -20,6 +20,26 @@ async def get_user_account(user: schemas.UserInResponse = Depends(get_current_us
 async def get_user_assets(user: schemas.UserInResponse = Depends(get_current_user)):
     return crud.assets_crud.get_many_by_user_id(user_id=user.id)
 
+@router.get("/user-budgets", response_model=List[schemas.BudgetInResponse])
+async def get_user_budgets(user: schemas.UserInResponse = Depends(get_current_user)):
+    return crud.budgets_crud.get_many_by_user_id(user_id=user.id)
+
+@router.get("/user-expenses", response_model=List[schemas.ExpenseInResponse])
+async def get_user_expenses(user: schemas.UserInResponse = Depends(get_current_user)):
+    return crud.expenses_crud.get_many_by_user_id(user_id=user.id)
+
+@router.get("/user-goals", response_model=List[schemas.GoalInResponse])
+async def get_user_goals(user: schemas.UserInResponse = Depends(get_current_user)):
+    return crud.goals_crud.get_many_by_user_id(user_id=user.id)
+
+@router.get("/user-incomes", response_model=List[schemas.IncomeInResponse])
+async def get_user_incomes(user: schemas.UserInResponse = Depends(get_current_user)):
+    return crud.income_crud.get_many_by_user_id(user_id=user.id)
+
+@router.get("/user-liabilities", response_model=List[schemas.LiabilityInResponse])
+async def get_user_liabilities(user: schemas.UserInResponse = Depends(get_current_user)):
+    return crud.liabilities_crud.get_many_by_user_id(user_id=user.id)
+
 @router.get("/{id}", response_model=schemas.UserInResponse)
 async def get_user_by_id(id: schemas.PyObjectId):
     return crud.user_crud.get_by_id(id=id)

@@ -1,3 +1,4 @@
+from datetime import date
 from pydantic import BaseModel, Field
 from typing import Optional
 
@@ -8,8 +9,7 @@ class GoalCreate(BaseModel):
     category: Optional[str] = None
     description: Optional[str] = None
     closing_value: Optional[float] = 0.0
-    year: Optional[int] = None
-    month: Optional[int] = None
+    target_date: Optional[str] = date.today().strftime("%Y-%m-%d")
 
 class ExtendedGoalCreate(GoalCreate, DateMixins):
     user_id: PyObjectId
@@ -23,6 +23,5 @@ class GoalInUpdate(BaseModel):
     category: Optional[str] = None
     description: Optional[str] = None
     closing_value: Optional[float] = None
-    is_achieved: Optional[float] = None
-    year: Optional[int] = None
-    month: Optional[int] = None
+    is_achieved: Optional[bool] = None
+    target_date: Optional[str] = None

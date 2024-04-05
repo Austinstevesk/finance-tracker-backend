@@ -8,6 +8,7 @@ from ..utils.oauth2 import access_security, refresh_security
 
 
 user_crud = CRUDBase(user_collection, "User")
+from ..crud.crud_accounts import accounts_crud
 
 def create_user(user: schemas.UserInSignUp):
     existing_user = user_collection.find_one({"email": user.email})
@@ -19,7 +20,13 @@ def create_user(user: schemas.UserInSignUp):
     user = schemas.ExtendedUserInSignup(**schemas.UserInDB(**user.__dict__).__dict__)
     # hash password
     user.password = hash(password=user.password)
-    return user_crud.create(obj_in=user)
+    user = user_crud.create(obj_in=user)
+    user_account = schemas.AccountCreate(
+        user_id=user["_id"],
+        balance=0.0,
+    )
+    accounts_crud.create(obj_in=user_account)
+    return user
 
 def login_user(user: schemas.UserInLogin):
     existing_user = user_collection.find_one({"email": user.email})

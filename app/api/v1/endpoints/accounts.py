@@ -33,7 +33,3 @@ async def get_account_by_id(id: schemas.PyObjectId):
 @router.put("/{id}", response_model=schemas.AccountInResponse)
 async def update_account(id: schemas.PyObjectId, account: schemas.AccountInUpdate):
     return crud.accounts_crud.update(id=id, obj_in=account)
-
-@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_account(id: schemas.PyObjectId):
-    return crud.accounts_crud.delete(id=id)

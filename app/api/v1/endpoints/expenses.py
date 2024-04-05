@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
+from datetime import date, timedelta
 from .... import schemas, crud
 from ....utils.oauth2 import get_current_user
 
@@ -17,6 +18,39 @@ async def create_user_Expense(
         user_id=user.id,
         is_settled=True,
     )
+    date_today = date.today()
+    query =  {
+            "user_id": schemas.PyObjectId(user.id),
+            "category": user_expense.major_categorization,
+            "start_date": {"$gte": date_today.strftime("%Y-%m-%d")},
+            "end_date": {"$lte": date_today.strftime("%Y-%m-%d")}
+            }
+    expenses_budget = schemas.BudgetInResponse(**crud.budgets_crud.get_by_query(query=query))
+    if expenses_budget:
+        # get the months expenses
+        min_date = date_today.replace(day=1).strftime("%Y-%m-%d")
+        max_date = (
+            date_today.replace(
+                month=date_today.month + 1
+                ).replace(day=1) - timedelta(days=1)
+            ).strftime("%Y-%m-%d")
+        query =  {
+            "user_id": schemas.PyObjectId(user.id),
+            "major_categorization": "expenses",
+            "date": {"$gte": min_date},
+            "date": {"$lte": max_date}
+            }
+        expenses = crud.expenses_crud.get_many(query=query)
+        total = 0
+        for data in expenses:
+            total += data["value"]
+        if expenses_budget.value < (total + expense.value):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Cannot settle the expense due to budget constraints"
+            )
+        
+        
     user_account = schemas.AccountInResponse(**crud.accounts_crud.get_by_user_id(
         user_id=user.id
     ))
@@ -38,9 +72,37 @@ async def get_Expense_by_id(id: schemas.PyObjectId):
     return crud.expenses_crud.get_by_id(id=id)
 
 @router.put("/{id}", response_model=schemas.ExpenseInResponse)
-async def update_Expense(id: schemas.PyObjectId, expense: schemas.ExpenseInUpdate):
+async def update_Expense(
+    id: schemas.PyObjectId,
+    expense: schemas.ExpenseInUpdate,
+    user: schemas.UserInResponse = Depends(get_current_user)
+    ):
+    if expense.value:
+        existing_expense = schemas.ExpenseInResponse(**crud.expenses_crud.get_by_id(id=id))
+        user_account = schemas.AccountInResponse(**crud.accounts_crud.get_by_user_id(
+            user_id=user.id
+        ))
+        balance = user_account.balance
+        new_balance = (balance + existing_expense.value) - expense.value
+        crud.accounts_crud.update(
+            id=user_account.id,
+            obj_in=schemas.AccountInUpdate(balance=new_balance)
+            )
     return crud.expenses_crud.update(id=id, obj_in=expense)
 
 @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_Expense(id: schemas.PyObjectId):
+async def delete_Expense(
+    id: schemas.PyObjectId,
+    user: schemas.UserInResponse = Depends(get_current_user)
+    ):
+    existing_expense = schemas.ExpenseInResponse(**crud.expenses_crud.get_by_id(id=id))
+    user_account = schemas.AccountInResponse(**crud.accounts_crud.get_by_user_id(
+        user_id=user.id
+    ))
+    balance = user_account.balance
+    new_balance = balance + existing_expense.value
+    crud.accounts_crud.update(
+        id=user_account.id,
+        obj_in=schemas.AccountInUpdate(balance=new_balance)
+        )
     return crud.expenses_crud.delete(id=id)
