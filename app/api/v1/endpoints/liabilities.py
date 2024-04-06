@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from datetime import date, timedelta
+from datetime import date
 from app import schemas, crud
 from app.utils.oauth2 import get_current_user
+from app.utils.date_utils import get_current_month_min_max_dates
 
 router = APIRouter(
     prefix="/liabilities", tags=["Liabilities"],
@@ -64,12 +65,7 @@ async def settle_liability(
         liabilities_budget = schemas.BudgetInResponse(**budget)
     if liabilities_budget:
         # get the months liabilities
-        min_date = date_today.replace(day=1).strftime("%Y-%m-%d")
-        max_date = (
-            date_today.replace(
-                month=date_today.month + 1
-                ).replace(day=1) - timedelta(days=1)
-            ).strftime("%Y-%m-%d")
+        min_date, max_date = get_current_month_min_max_dates()
         query =  {
             "user_id": schemas.PyObjectId(user.id),
             "major_categorization": "liabilities",
