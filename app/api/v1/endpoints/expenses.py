@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from datetime import date, timedelta
 from app import schemas, crud
+from app.utils.date_utils import get_current_month_min_max_dates
 from app.utils.oauth2 import get_current_user
 
 router = APIRouter(
@@ -25,7 +26,10 @@ async def create_user_Expense(
             "start_date": {"$gte": date_today.strftime("%Y-%m-%d")},
             "end_date": {"$lte": date_today.strftime("%Y-%m-%d")}
             }
-    expenses_budget = schemas.BudgetInResponse(**crud.budgets_crud.get_by_query(query=query))
+    budget  = crud.budgets_crud.get_by_query(query=query)
+    expenses_budget = None
+    if budget:
+        expenses_budget = schemas.BudgetInResponse(**budget)
     if expenses_budget:
         # get the months expenses
         min_date = date_today.replace(day=1).strftime("%Y-%m-%d")
@@ -67,8 +71,26 @@ async def create_user_Expense(
         )
     return crud.expenses_crud.create(obj_in=user_expense)
 
+@router.get("/current-month-expenses", response_model=schemas.TotalDisplay)
+async def get_current_month_expenses(
+    user: schemas.UserInResponse = Depends(get_current_user)
+    ):
+    min_date, max_date = get_current_month_min_max_dates()
+    query = {
+        "user_id": schemas.PyObjectId(user.id),
+        "date": {"$gte": min_date},
+        "date": {"$lte": max_date},
+    }
+    current_month_expenses = crud.expenses_crud.get_many(
+        query=query,
+    )
+    total = 0
+    for exp in current_month_expenses:
+        total += exp["value"]
+    return schemas.TotalDisplay(total=total)
+
 @router.get("/{id}", response_model=schemas.ExpenseInResponse)
-async def get_Expense_by_id(id: schemas.PyObjectId):
+async def get_expense_by_id(id: schemas.PyObjectId):
     return crud.expenses_crud.get_by_id(id=id)
 
 @router.put("/{id}", response_model=schemas.ExpenseInResponse)

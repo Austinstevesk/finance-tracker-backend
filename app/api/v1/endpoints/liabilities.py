@@ -57,7 +57,11 @@ async def settle_liability(
             "start_date": {"$gte": date_today.strftime("%Y-%m-%d")},
             "end_date": {"$lte": date_today.strftime("%Y-%m-%d")}
             }
-    liabilities_budget = schemas.BudgetInResponse(**crud.budgets_crud.get_by_query(query=query))
+    
+    budget  = crud.budgets_crud.get_by_query(query=query)
+    liabilities_budget = None
+    if budget:
+        liabilities_budget = schemas.BudgetInResponse(**budget)
     if liabilities_budget:
         # get the months liabilities
         min_date = date_today.replace(day=1).strftime("%Y-%m-%d")

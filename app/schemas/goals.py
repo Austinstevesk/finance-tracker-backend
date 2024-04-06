@@ -8,6 +8,7 @@ class GoalCreate(BaseModel):
     name: str
     category: Optional[str] = None
     description: Optional[str] = None
+    current_value: Optional[float] = 0.0
     closing_value: Optional[float] = 0.0
     target_date: Optional[str] = date.today().strftime("%Y-%m-%d")
 
@@ -22,6 +23,7 @@ class GoalInUpdate(BaseModel):
     name: Optional[str] = None
     category: Optional[str] = None
     description: Optional[str] = None
+    current_value: Optional[float] = None
     closing_value: Optional[float] = None
     is_achieved: Optional[bool] = None
     target_date: Optional[str] = None

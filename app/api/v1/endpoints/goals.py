@@ -23,7 +23,15 @@ async def get_goal_by_id(id: schemas.PyObjectId):
     return crud.goals_crud.get_by_id(id=id)
 
 @router.put("/{id}", response_model=schemas.GoalInResponse)
-async def update_goal(id: schemas.PyObjectId, goal: schemas.GoalInUpdate):
+async def update_goal(
+    id: schemas.PyObjectId,
+    goal: schemas.GoalInUpdate,
+    ):
+    if goal.current_value:
+        existing_goal = crud.goals_crud.get_by_id(id=id)
+        if existing_goal:
+            current_value = existing_goal["current_value"]
+            goal.current_value += current_value
     return crud.goals_crud.update(id=id, obj_in=goal)
 
 @router.put("/{id}/settle", response_model=schemas.GoalInResponse)

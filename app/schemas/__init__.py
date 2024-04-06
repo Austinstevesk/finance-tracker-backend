@@ -1,3 +1,4 @@
+from pydantic import BaseModel
 from app.schemas.base import PyObjectId
 from app.schemas.users import (
     ExtendedUserInSignup,
@@ -57,3 +58,6 @@ from app.schemas.liabilities import (
     LiabilityInResponse,
     LiabilityInUpdate,
 )
+
+class TotalDisplay(BaseModel):
+    total: int

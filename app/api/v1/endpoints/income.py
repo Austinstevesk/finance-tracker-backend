@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from app import schemas, crud
 from app.utils.oauth2 import get_current_user
+from app.utils.date_utils import get_current_month_min_max_dates
 
 router = APIRouter(
     prefix="/income", tags=["Income"],
@@ -26,6 +27,24 @@ async def create_user_Income(
         schemas.AccountInUpdate(balance=new_balance)
     )
     return crud.income_crud.create(obj_in=user_income)
+
+@router.get("/current-month-income", response_model=schemas.TotalDisplay)
+async def get_current_month_income(
+    user: schemas.UserInResponse = Depends(get_current_user)
+    ):
+    min_date, max_date = get_current_month_min_max_dates()
+    query = {
+        "user_id": schemas.PyObjectId(user.id),
+        "date_received": {"$gte": min_date},
+        "date_received": {"$lte": max_date},
+    }
+    current_month_income = crud.income_crud.get_many(
+        query=query,
+    )
+    total = 0
+    for exp in current_month_income:
+        total += exp["value"]
+    return schemas.TotalDisplay(total=total)
 
 @router.get("/{id}", response_model=schemas.IncomeInResponse)
 async def get_Income_by_id(id: schemas.PyObjectId):
