@@ -24,7 +24,8 @@ async def create_user_Income(
     balance = user_account.balance
     new_balance = balance + income.value
     crud.accounts_crud.update(
-        schemas.AccountInUpdate(balance=new_balance)
+        id=user_account.id,
+        obj_in=schemas.AccountInUpdate(balance=new_balance)
     )
     return crud.income_crud.create(obj_in=user_income)
 
